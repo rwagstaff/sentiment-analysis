@@ -3,11 +3,16 @@ import {HelloWorld} from "./hello-world.component";
 import {UploadFileComponent} from "./upload-file.component";
 import {fastButton, fastDivider, provideFASTDesignSystem} from "@microsoft/fast-components";
 import {HeaderComponent} from "./header.component";
+import {ObsExampleComponent} from "./obs-example.component";
+
 
 provideFASTDesignSystem()
     .register(
         fastButton(),
         fastDivider(),
+        HeaderComponent,
+        ObsExampleComponent,
+        UploadFileComponent
     );
 
 console.log(tf);
@@ -18,6 +23,4 @@ console.log("Hello World!");
 // or simply <hello-world /> is recognised as this element
 
 window.customElements.define("hello-world", HelloWorld);
-window.customElements.define("upload-file", UploadFileComponent);
-window.customElements.define("app-header", HeaderComponent);
 

@@ -1,30 +1,34 @@
-import {attr, css, customElement, FASTElement, html} from '@microsoft/fast-element';
+import {attr, observable, css, customElement, FASTElement, html} from '@microsoft/fast-element';
 
 const template = html<HeaderComponent>`
     <div class="header">
         <h3>Sentiment Analysis</h3>
-        <h4>Please upload a WhatsApp export file then press the analyse button</h4>
+        <h4>Please upload a ${x => x.appName} export file then press the analyse button</h4>
+        <fast-divider></fast-divider>
     </div>
-    <fast-divider></fast-divider>
 `;
 
-@customElement({
-    name: 'app-header',
-    template,
-    styles: css`
- 
-
-  :host(.header) {
+const styles = `
+<style>
+  :host {
   background-color: yellow;
   }
   
   .header {
-   background-color: pink;
+    margin: 1rem;
+    position: relative;
+   /*// background-color: blue;*/
   }
-    
-    
+  </style>
 `
+
+@customElement({
+    name: 'app-header',
+    template,
+    styles: css`${styles}`
 })
 export class HeaderComponent extends FASTElement {
-    @attr greeting: string = 'Hello';
+    @attr appName: string = 'WhatsApp';
 }
+
+//FASTElement.define(HeaderComponent);

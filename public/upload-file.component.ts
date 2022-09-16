@@ -1,32 +1,36 @@
-export class UploadFileComponent extends HTMLElement {
-    constructor() {
-        super();
+import {css, customElement, FASTElement, html} from "@microsoft/fast-element";
 
-        // const template = document.getElementById('upload-file') as any;
-        // const templateContent = template.content;
-        //
-        // this.attachShadow({mode: 'open'}).appendChild(
-        //     templateContent.cloneNode(true)
-        // );
+const uploadFileId = "upload-file-input"
 
-        // const input = document.getElementById('upload-file-input');
-        // input.onchange = (e) => {
-        //     console.log(e);
-        //     console.log('File Change');
-        // }
-    }
+const template = html<UploadFileComponent>`
+    <div class="d-flex">
+        Upload File
+        <input type="file" id="${uploadFileId}" accept="text/plain">
+    </div>
+`;
+
+const styles = css`
+<style>
+  :host {
+  contain: content;
+  margin: 1rem;
+  }
+
+  </style>
+`
+
+@customElement({
+    name: 'app-upload-file',
+    template,
+    styles
+})
+export class UploadFileComponent extends FASTElement {
+
 
     connectedCallback() {
-        this.innerHTML = `<div class="d-flex">
-        <input type="file" id="upload-file-input" name="upload-file-input" accept="text/plain">
-        <fast-button>Upload3</fast-button>
-    </div>`
-        const input = document.getElementById('upload-file-input');
+        super.connectedCallback();
+        const input = this.shadowRoot.getElementById(uploadFileId);
         input.addEventListener("change", handleFiles, false);
-        // input.onchange = (e) => {
-        //     console.log(e);
-        //     console.log('File Change');
-        // }
     }
 
 }
@@ -34,6 +38,7 @@ export class UploadFileComponent extends HTMLElement {
 function handleFiles() {
     const file = this.files[0] as File;
     file.text().then(value => {
-        console.log(value)
+        const lines = value.split('\n');
+        console.log(lines[0]);
     })
 }
