@@ -30,5 +30,3 @@ const styles = `
 export class HeaderComponent extends FASTElement {
     @attr appName: string = 'WhatsApp';
 }
-
-//FASTElement.define(HeaderComponent);

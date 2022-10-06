@@ -4,16 +4,18 @@ import {UploadFileComponent} from "./upload-file.component";
 import {fastButton, fastDivider, provideFASTDesignSystem} from "@microsoft/fast-components";
 import {HeaderComponent} from "./header.component";
 import {ObsExampleComponent} from "./obs-example.component";
+import {AnalysisComponent} from "./analysis.component";
 
 
 provideFASTDesignSystem()
-    .register(
-        fastButton(),
-        fastDivider(),
-        HeaderComponent,
-        ObsExampleComponent,
-        UploadFileComponent
-    );
+  .register(
+    fastButton(),
+    fastDivider(),
+    HeaderComponent,
+    ObsExampleComponent,
+    UploadFileComponent,
+    AnalysisComponent
+  );
 
 console.log(tf);
 
