@@ -11,7 +11,6 @@ color: red;
 
 export class HelloWorld extends HTMLElement {
     connectedCallback() {
-
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 

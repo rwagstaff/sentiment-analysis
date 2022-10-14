@@ -13,12 +13,6 @@ const styles = `
   :host {
   background-color: yellow;
   }
-  
-  .header {
-    margin: 1rem;
-    position: relative;
-   /*// background-color: blue;*/
-  }
   </style>
 `
 

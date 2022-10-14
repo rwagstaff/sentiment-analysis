@@ -5,6 +5,7 @@ import {fastButton, fastDivider, provideFASTDesignSystem} from "@microsoft/fast-
 import {HeaderComponent} from "./header.component";
 import {ObsExampleComponent} from "./obs-example.component";
 import {AnalysisComponent} from "./analysis.component";
+import {ChatSummaryComponent} from "./chat-summary.component";
 
 
 provideFASTDesignSystem()
@@ -14,7 +15,8 @@ provideFASTDesignSystem()
     HeaderComponent,
     ObsExampleComponent,
     UploadFileComponent,
-    AnalysisComponent
+    AnalysisComponent,
+    ChatSummaryComponent
   );
 
 console.log(tf);
