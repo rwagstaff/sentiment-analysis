@@ -14,7 +14,7 @@ const template = html<ObsExampleComponent>`
     template,
 })
 export class ObsExampleComponent extends FASTElement {
-    @observable exampleArr: Array<number> = [];
+    @observable exampleArr: number[] = [];
 
     connectedCallback() {
         super.connectedCallback();
@@ -25,4 +25,4 @@ export class ObsExampleComponent extends FASTElement {
     }
 }
 
-//FASTElement.define(HeaderComponent);
+// FASTElement.define(HeaderComponent);

@@ -1,21 +1,21 @@
 import {Temporal} from '@js-temporal/polyfill';
+import {IChatMessage} from "./chat";
 
 export const uploadFileId = "upload-file-input"
 
-export interface IChatMessage {
-  date: string;
-  personName: string;
-  sentence: string;
-}
 
 const dateRegex = /\[([0-9]{2}\/[0-9]{2}\/[0-9]{4}, [0-9]{2}:[0-9]{2}:[0-9]{2})\]/g
 
-export function parseFileText(text: string): Array<IChatMessage> {
+export function parseFileText(text: string, ignoreLines: number = 1): IChatMessage[] {
 
-  const messages = text.split(dateRegex).slice(1);
-  const chats: Array<IChatMessage> = [];
+  const messages = text.split(dateRegex).slice(ignoreLines);
+  const chats: IChatMessage[] = [];
   for (let i = 0; i < messages.length; i = i + 2) {
-    chats.push(parseLine(messages[i], messages[i + 1]));
+    const nameAndMessage = messages[i + 1];
+    if (nameAndMessage.indexOf(':') !== -1) {
+      // Probably a WhatsApp generated message (ie You were added)
+      chats.push(parseLine(messages[i], nameAndMessage));
+    }
   }
 
   return chats;
@@ -46,5 +46,17 @@ function parseDate(str: string): string {
     second: +timeParts[2]
   };
   return Temporal.PlainDateTime.from(date).toString();
+}
+
+export function groupByPerson(lines: IChatMessage[]): Map<string, IChatMessage[]> {
+  const map = new Map<string, IChatMessage[]>();
+  lines.forEach(line => {
+    if (map.get(line.personName)) {
+      map.get(line.personName).push(line)
+    } else {
+      map.set(line.personName, [line]);
+    }
+  })
+  return map;
 }
 

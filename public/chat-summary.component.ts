@@ -14,7 +14,7 @@ const template = html<ChatSummaryComponent>`
 })
 export class ChatSummaryComponent extends FASTElement {
 
-  chats: Array<IChatMessage>
+  chats: IChatMessage[]
 
   connectedCallback() {
     super.connectedCallback();

@@ -1,5 +1,5 @@
-import {customElement, FASTElement, html, observable, when, Observable} from "@microsoft/fast-element";
-import {IChatMessage, uploadFileId} from "./text-handler";
+import {customElement, FASTElement, html, observable, when} from "@microsoft/fast-element";
+import {IChatMessage} from "./chat";
 
 const template = html<AnalysisComponent>`
     <main>
@@ -26,7 +26,7 @@ const template = html<AnalysisComponent>`
 })
 export class AnalysisComponent extends FASTElement {
 
-  @observable chats: Array<IChatMessage> = [];
+  @observable chats: IChatMessage[] = [];
   @observable ready: boolean = false;
 
   connectedCallback() {

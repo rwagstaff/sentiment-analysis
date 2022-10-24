@@ -26,7 +26,7 @@ const styles = css`
 })
 export class UploadFileComponent extends FASTElement {
 
-  chats: Array<IChatMessage>
+  chats: IChatMessage[]
 
   connectedCallback() {
     console.log(this.chats)
@@ -37,7 +37,7 @@ export class UploadFileComponent extends FASTElement {
 
 }
 
-function handleFilesWrapper(chatMessages: Array<IChatMessage>) {
+function handleFilesWrapper(chatMessages: IChatMessage[]) {
 
   return function handleFiles() {
     const file = this.files[0] as File;
