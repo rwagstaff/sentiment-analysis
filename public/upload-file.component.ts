@@ -1,5 +1,5 @@
 import {css, customElement, FASTElement, html} from "@microsoft/fast-element";
-import {IChatMessage, parseFileText, uploadFileId} from "./text-handler";
+import {parseFileText, uploadFileId} from "./text-handler";
 
 
 const template = html<UploadFileComponent>`
@@ -26,33 +26,24 @@ const styles = css`
 })
 export class UploadFileComponent extends FASTElement {
 
-  chats: IChatMessage[]
-
   connectedCallback() {
-    console.log(this.chats)
     super.connectedCallback();
     const input = this.shadowRoot.getElementById(uploadFileId);
-    input.addEventListener("change", handleFilesWrapper(this.chats), false);
+    input.addEventListener("change", handleFiles, false);
   }
 
 }
 
-function handleFilesWrapper(chatMessages: IChatMessage[]) {
-
-  return function handleFiles() {
-    const file = this.files[0] as File;
-    // User could have pressed cancel
-    if (file) {
-      file.text().then(value => {
-        const items = parseFileText(value);
-        console.log('Finished parsing ' + items.length + ' messages');
-        this.dispatchEvent(new CustomEvent('upload-file', {detail: items, bubbles: true, composed: true}));
-      })
-    }
-
-
+function handleFiles() {
+  const file = this.files[0] as File;
+  // User could have pressed cancel
+  if (file) {
+    file.text().then(value => {
+      const items = parseFileText(value);
+      console.log('Finished parsing ' + items.length + ' messages');
+      this.dispatchEvent(new CustomEvent('upload-file', {detail: items, bubbles: true, composed: true}));
+    })
   }
-
 }
 
 

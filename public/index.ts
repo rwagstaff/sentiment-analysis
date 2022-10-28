@@ -1,4 +1,4 @@
-import * as tf from '@tensorflow/tfjs'
+import * as tf from '@tensorflow/tfjs-core'
 import {HelloWorld} from "./hello-world.component";
 import {UploadFileComponent} from "./upload-file.component";
 import {fastButton, fastDivider, provideFASTDesignSystem} from "@microsoft/fast-components";

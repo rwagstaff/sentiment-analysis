@@ -11,11 +11,12 @@
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
     "serve": "webpack serve",
-    "tslint": "tslint --fix --project tsconfig.json"
+    "tslint": "tslint --project tsconfig.json --fix"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@antv/g2": "^4.2.8",
     "@js-temporal/polyfill": "^0.4.2",
     "@microsoft/fast-components": "^2.30.6",
     "@tensorflow-models/toxicity": "^1.2.2",
