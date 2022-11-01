@@ -1,28 +1,25 @@
 import {css, customElement, FASTElement, html} from "@microsoft/fast-element";
 import {parseFileText, uploadFileId} from "./text-handler";
+import {removeStyleTag} from "./chat";
 
 
 const template = html<UploadFileComponent>`
-    <div class="d-flex">
-        <span>Upload File</span>
-        <input type="file" id="${uploadFileId}" accept="text/plain">
-    </div>
+    <fast-button appearance="neutral" @click=${x => x.openDialog()}/>
+        Upload
+    </fast-button>
+    <input id="${uploadFileId}" type='file' accept="text/plain" hidden/>
 `;
 
-const styles = css`
+const styles = removeStyleTag(`
 <style>
-  :host {
-  contain: content;
-  margin: 1rem;
-  }
 
   </style>
-`
+`)
 
 @customElement({
   name: 'app-upload-file',
   template,
-  styles
+  styles: css`${styles}`
 })
 export class UploadFileComponent extends FASTElement {
 
@@ -32,15 +29,20 @@ export class UploadFileComponent extends FASTElement {
     input.addEventListener("change", handleFiles, false);
   }
 
+
+  openDialog() {
+    this.shadowRoot.getElementById(uploadFileId).click();
+  }
+
 }
 
 function handleFiles() {
+  this.dispatchEvent(new CustomEvent('uploading', {bubbles: true, composed: true}));
   const file = this.files[0] as File;
   // User could have pressed cancel
   if (file) {
     file.text().then(value => {
       const items = parseFileText(value);
-      console.log('Finished parsing ' + items.length + ' messages');
       this.dispatchEvent(new CustomEvent('upload-file', {detail: items, bubbles: true, composed: true}));
     })
   }

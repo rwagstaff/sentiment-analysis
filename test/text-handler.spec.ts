@@ -1,10 +1,13 @@
 import {expect} from '@jest/globals';
-import {IChatMessage, parseFileText, parseLine} from "../public/text-handler";
+import {parseFileText, parseLine} from "../public/text-handler";
+import {IChatMessage} from "../public/chat";
 
 
 function assertText(text: string, expectedChat: Array<IChatMessage>) {
-  const chat = parseFileText(text);
-  expect(expectedChat).toEqual(chat);
+  const fullText = "[19/11/2017, 21:10:34] Group: Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.\n"
+  const chat = parseFileText(fullText + text);
+  expect(expectedChat).toEqual(chat.messages);
+  expect(chat.groupMessage.personName).toBe('Group');
 }
 
 describe('text-handler', () => {
@@ -93,9 +96,8 @@ describe('text-handler', () => {
 
   })
 
-  it('should skip group creation message', function () {
+  it('should skip group creation message', () => {
     const text = `
-    [19/11/2017, 21:10:34] Group: Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.
     [19/11/2017, 21:10:34] Mr Smith: Normal Message.
     [19/11/2017, 21:13:05] Mrs Jones: I should still parse
     [12/11/2017, 21:13:05] You are were added
@@ -110,10 +112,8 @@ describe('text-handler', () => {
         personName: 'Mrs Jones',
         sentence: `I should still parse`
       }
-    ]
-
-    const chat = parseFileText(text, 3);
-    expect(expectedChat).toEqual(chat);
+    ];
+    assertText(text, expectedChat)
   });
 
 

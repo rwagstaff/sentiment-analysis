@@ -1,24 +1,25 @@
 import {Temporal} from '@js-temporal/polyfill';
-import {IChatMessage} from "./chat";
+import {IChat, IChatMessage} from "./chat";
 
 export const uploadFileId = "upload-file-input"
 
 
 const dateRegex = /\[([0-9]{2}\/[0-9]{2}\/[0-9]{4}, [0-9]{2}:[0-9]{2}:[0-9]{2})\]/g
 
-export function parseFileText(text: string, ignoreLines: number = 1): IChatMessage[] {
 
-  const messages = text.split(dateRegex).slice(ignoreLines);
-  const chats: IChatMessage[] = [];
-  for (let i = 0; i < messages.length; i = i + 2) {
-    const nameAndMessage = messages[i + 1];
+export function parseFileText(text: string): IChat {
+  const lines = text.split(dateRegex);
+  const chatLines = lines.slice(3);
+  const messages: IChatMessage[] = [];
+  for (let i = 0; i < chatLines.length; i = i + 2) {
+    const nameAndMessage = chatLines[i + 1];
     if (nameAndMessage.indexOf(':') !== -1) {
       // Probably a WhatsApp generated message (ie You were added)
-      chats.push(parseLine(messages[i], nameAndMessage));
+      messages.push(parseLine(chatLines[i], nameAndMessage));
     }
   }
 
-  return chats;
+  return {groupMessage: parseLine(lines[1], lines[2]), messages};
 }
 
 export function parseLine(dateString: string, nameAndMessage: string): IChatMessage {

@@ -1,22 +1,26 @@
 import * as tf from '@tensorflow/tfjs-core'
 import {HelloWorld} from "./hello-world.component";
 import {UploadFileComponent} from "./upload-file.component";
-import {fastButton, fastDivider, provideFASTDesignSystem} from "@microsoft/fast-components";
+import {fastButton, fastCard, fastDivider, fastToolbar, provideFASTDesignSystem} from "@microsoft/fast-components";
 import {HeaderComponent} from "./header.component";
-import {ObsExampleComponent} from "./obs-example.component";
 import {AnalysisComponent} from "./analysis.component";
 import {ChatSummaryComponent} from "./chat-summary.component";
+import {SpinnerComponent} from "./spinner.component";
+import {ChatSentimentComponent} from "./chat-sentiment.component";
 
 
 provideFASTDesignSystem()
   .register(
     fastButton(),
     fastDivider(),
-    HeaderComponent,
-    ObsExampleComponent,
-    UploadFileComponent,
+    fastToolbar(),
+    fastCard(),
     AnalysisComponent,
-    ChatSummaryComponent
+    ChatSummaryComponent,
+    ChatSentimentComponent,
+    HeaderComponent,
+    SpinnerComponent,
+    UploadFileComponent,
   );
 
 console.log(tf);
