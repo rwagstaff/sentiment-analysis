@@ -32,7 +32,9 @@ export class ChatSentimentComponent extends FASTElement {
   connectedCallback() {
     super.connectedCallback();
     const elem = this.shadowRoot.getElementById('container')
-    initBarChart(this.chartData, elem);
+    if (this.chartData) {
+      initBarChart(this.chartData, elem);
+    }
   }
 
 

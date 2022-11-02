@@ -23,7 +23,8 @@ provideFASTDesignSystem()
     UploadFileComponent,
   );
 
-console.log(tf);
+tf.setBackend('webgl').then(() => console.log('Updated backend ' + tf.getBackend()))
+
 
 console.log("Hello World!");
 

@@ -3,7 +3,7 @@ import {IChatMessage, IPerson} from "./chat";
 import {IChartData} from "./chart-utils";
 
 
-const threshold = 0.9;
+const threshold = 0.7;
 
 
 export interface IToxicityResult {
@@ -20,23 +20,20 @@ export interface IPersonTotal extends IPerson {
 }
 
 
-export async function classifySentences(sentences: string[]): Promise<IToxicityResult[]> {
-  const model = await load(threshold, undefined)
-  return await model.classify(sentences);
+export function classifySentences(sentences: string[]): void {
+  load(threshold, undefined).then(model =>
+    model.classify(sentences).then(results => {
+      console.log(results);
+    })
+  )
+
 }
 
-export async function classifyByPerson(chats: Map<string, IChatMessage[]>): Promise<IPersonTotal[]> {
-  const promises: Promise<IPersonTotal>[] = [];
-
-  chats.forEach((messages, personName) => {
+export function classifyByPerson(personName: string, messages: Array<IChatMessage>): void {
     const sentences = messages.map(message => message.sentence);
-    const promise = classifySentences(sentences).then(results => {
-      return resultToData(results, personName)
-    });
-    promises.push(promise);
-  })
+     classifySentences(sentences)
 
-  return await Promise.all(promises).then(value => value.flatMap(v => v))
+
 }
 
 function resultToData(toxicity: IToxicityResult[], personName: string): IPersonTotal {

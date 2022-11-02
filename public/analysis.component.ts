@@ -15,7 +15,7 @@ const template = html<AnalysisComponent>`
                     <app-chat-summary noOfMessages="${x => x.noOfMessages}" groupName="${x => x.groupName}"
                                       groupDate="${x => x.groupDate}"
                                       :chartData="${x => x.chartData}"></app-chat-summary>
-                    <app-chat-sentiment :chartData="${x => x.sentimentData}"></app-chat-sentiment>
+<!--                    <app-chat-sentiment :chartData="${x => x.personChartData}"></app-chat-sentiment>-->
                 `
         )}
 
@@ -52,7 +52,8 @@ export class AnalysisComponent extends FASTElement {
   noOfMessages: number;
   chartData: Array<IChartData>;
   groupedData: Map<string, Array<IChatMessage>>;
-  personData: IPersonTotal[]
+  personData: IPersonTotal
+  personChartData: Array<IChartData>
 
   connectedCallback() {
     super.connectedCallback();
@@ -63,7 +64,9 @@ export class AnalysisComponent extends FASTElement {
       this.groupName = chat.groupMessage.personName;
       this.groupDate = chat.groupMessage.date;
       this.groupedData = groupByPerson(this.chats);
-      this.personData = await classifyByPerson(this.groupedData);
+      const [firstPerson] = this.groupedData.keys();
+      classifyByPerson(firstPerson, this.groupedData.get(firstPerson));
+      //this.personChartData = this.personData.data;
       this.noOfMessages = this.chats.length;
       this.chartData = calcMessageSummary(this.groupedData, this.noOfMessages);
       this.ready = true;

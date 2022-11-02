@@ -16,6 +16,10 @@ const template = html<ChatSummaryComponent>`
 const styles = removeStyleTag(`
 <style>
 
+h1 {
+text-align: center;
+}
+
 .chat-summary {
 display: flex;
 justify-content: center;
@@ -42,7 +46,9 @@ export class ChatSummaryComponent extends FASTElement {
   connectedCallback() {
     super.connectedCallback();
     const elem = this.shadowRoot.getElementById('container')
-    initPieChart(this.chartData, elem)
+    if (this.chartData) {
+      initPieChart(this.chartData, elem)
+    }
   }
 
 
