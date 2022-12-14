@@ -1,9 +1,11 @@
-import {load} from '@tensorflow-models/toxicity'
+import {load, ToxicityClassifier} from '@tensorflow-models/toxicity'
 import {IChatMessage, IPerson} from "./chat";
 import {IChartData} from "./chart-utils";
 
 
-const threshold = 0.7;
+const threshold = 0.5;
+const chunkSize = 1000;
+
 
 
 export interface IToxicityResult {
@@ -20,20 +22,19 @@ export interface IPersonTotal extends IPerson {
 }
 
 
-export function classifySentences(sentences: string[]): void {
-  load(threshold, undefined).then(model =>
-    model.classify(sentences).then(results => {
-      console.log(results);
-    })
-  )
+export function classifySentences(personName: string, messages: Array<IChatMessage>, model: ToxicityClassifier): void {
+  const sentences = messages.map(message => message.sentence);
+  const chunk = sentences.slice(0, chunkSize);
+  model.classify(chunk).then(results => {
+    const data = resultToData(results, personName);
+
+  })
+
 
 }
 
-export function classifyByPerson(personName: string, messages: Array<IChatMessage>): void {
-    const sentences = messages.map(message => message.sentence);
-     classifySentences(sentences)
-
-
+export async function loadModel(): Promise<ToxicityClassifier> {
+  return load(threshold, undefined)
 }
 
 function resultToData(toxicity: IToxicityResult[], personName: string): IPersonTotal {

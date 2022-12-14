@@ -3,7 +3,8 @@ import {IChat, IChatMessage, removeStyleTag} from "./chat";
 import {IChartData} from "./chart-utils";
 import {calcMessageSummary} from "./chat-summary";
 import {groupByPerson} from "./text-handler";
-import {classifyByPerson, IPersonTotal} from "./chat-analysis";
+import {classifySentences, IPersonTotal, loadModel} from "./chat-analysis";
+import {ToxicityClassifier} from "@tensorflow-models/toxicity";
 
 const template = html<AnalysisComponent>`
     ${when(x => x.loading, html<AnalysisComponent>`
@@ -15,7 +16,7 @@ const template = html<AnalysisComponent>`
                     <app-chat-summary noOfMessages="${x => x.noOfMessages}" groupName="${x => x.groupName}"
                                       groupDate="${x => x.groupDate}"
                                       :chartData="${x => x.chartData}"></app-chat-summary>
-<!--                    <app-chat-sentiment :chartData="${x => x.personChartData}"></app-chat-sentiment>-->
+                    <!--                    <app-chat-sentiment :chartData="${x => x.personChartData}"></app-chat-sentiment>-->
                 `
         )}
 
@@ -54,9 +55,14 @@ export class AnalysisComponent extends FASTElement {
   groupedData: Map<string, Array<IChatMessage>>;
   personData: IPersonTotal
   personChartData: Array<IChartData>
+  private model: ToxicityClassifier;
 
   connectedCallback() {
     super.connectedCallback();
+    loadModel().then(model => {
+      console.log('Model loaded successfully');
+      this.model = model
+    });
     this.addEventListener('upload-file', async (e: CustomEvent) => {
 
       const chat = e.detail as IChat;
@@ -65,7 +71,7 @@ export class AnalysisComponent extends FASTElement {
       this.groupDate = chat.groupMessage.date;
       this.groupedData = groupByPerson(this.chats);
       const [firstPerson] = this.groupedData.keys();
-      classifyByPerson(firstPerson, this.groupedData.get(firstPerson));
+      classifySentences(firstPerson, this.groupedData.get(firstPerson), this.model);
       //this.personChartData = this.personData.data;
       this.noOfMessages = this.chats.length;
       this.chartData = calcMessageSummary(this.groupedData, this.noOfMessages);
