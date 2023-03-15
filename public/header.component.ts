@@ -11,6 +11,10 @@ const template = html<HeaderComponent>`
         <div class="upload-toolbar">
             <app-upload-file></app-upload-file>
             <fast-button appearance="accent" @click=${x => x.clearEvent()}>Clear Results</fast-button>
+            <fast-button appearance="accent" @click=${x => x.classifySentences()}>Classify</fast-button>
+            <fast-button appearance="accent" @click=${x => x.next()}>Next</fast-button>
+<!--            <fast-button appearance="accent" @click=${x => x.summarise()}>Summarise</fast-button>-->
+            
         </div>
     </header>
     <fast-divider></fast-divider>
@@ -38,4 +42,17 @@ export class HeaderComponent extends FASTElement {
   clearEvent() {
     this.dispatchEvent(new CustomEvent('clear-results', {bubbles: true, composed: true}));
   }
+
+  classifySentences() {
+    this.dispatchEvent(new CustomEvent('classify', {bubbles: true, composed: true}));
+  }
+
+  summarise() {
+    this.dispatchEvent(new CustomEvent('chart-summary', {bubbles: true, composed: true}));
+  }
+
+  next() {
+    this.dispatchEvent(new CustomEvent('next', {bubbles: true, composed: true}));
+  }
+
 }

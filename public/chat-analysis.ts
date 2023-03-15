@@ -1,55 +1,59 @@
 import {load, ToxicityClassifier} from '@tensorflow-models/toxicity'
-import {IChatMessage, IPerson} from "./chat";
-import {IChartData} from "./chart-utils";
-
-
-const threshold = 0.5;
-const chunkSize = 1000;
-
-
+import {IPerson, ISentence} from "./chat";
+import {engine} from "@tensorflow/tfjs-core";
 
 export interface IToxicityResult {
-  label: string;
-  results: {
+    label: string;
+    results: Array<IToxicityMatches>
+}
+
+export interface IToxicityMatches {
     probabilities: Float32Array;
     match: boolean;
-  }[]
+}
+
+export interface IMatchIndex {
+    index: number;
+
+    label: string;
+
+    text: string;
 }
 
 
 export interface IPersonTotal extends IPerson {
-  data: Array<IChartData>;
+    classifiedSentences: Array<ISentence>;
 }
 
 
-export function classifySentences(personName: string, messages: Array<IChatMessage>, model: ToxicityClassifier): void {
-  const sentences = messages.map(message => message.sentence);
-  const chunk = sentences.slice(0, chunkSize);
-  model.classify(chunk).then(results => {
-    const data = resultToData(results, personName);
+export async function classifySentences(sentences: Array<string>, model: ToxicityClassifier): Promise<Array<any>> {
+    console.log('before model')
+    console.log(engine().memory())
 
-  })
-
+    const results = await model.classify(sentences);
+    const a = filterToxicSentences(results, sentences);
+    console.log('after model')
+    console.log(engine().memory())
+    // model['model'].dispose()
+    // console.log('after model dispose')
+    // console.log(engine().memory())
+    return a;
 
 }
 
 export async function loadModel(): Promise<ToxicityClassifier> {
-  return load(threshold, undefined)
+    return load(0.5, undefined)
 }
 
-function resultToData(toxicity: IToxicityResult[], personName: string): IPersonTotal {
-  const data: IChartData[] = [];
-  toxicity.forEach(category => {
-    const matchingSentences = category.results.filter(sentence => sentence.match);
-    if (matchingSentences.length > 0) {
-      data.push({type: category.label, value: matchingSentences.length});
+function filterToxicSentences(toxicity: IToxicityResult[], sentences: Array<string>): Array<IMatchIndex> {
+    const matches: Array<IMatchIndex> = [];
+    for (let category of toxicity) {
+        category.results.forEach((res, sentenceIndex) => {
+            if (res.match) {
+                matches.push({index: sentenceIndex, text: sentences[sentenceIndex], label: category.label})
+            }
+        })
     }
-  });
-
-  return {personName, data};
-}
-
-export function totalPersonData(person: Array<IPersonTotal>): Array<IChartData> {
-  return person.flatMap(person => person.data)
+    return matches;
 }
 

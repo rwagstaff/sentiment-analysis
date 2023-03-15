@@ -46,6 +46,7 @@ function handleFiles() {
       this.dispatchEvent(new CustomEvent('upload-file', {detail: items, bubbles: true, composed: true}));
     })
   }
+  delete this.files;
 }
 
 
